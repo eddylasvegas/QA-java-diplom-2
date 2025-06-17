@@ -45,11 +45,29 @@ public class UserTests {
     }
 
     @Test
-    @DisplayName("Создание пользователя без обязательного поля")
+    @DisplayName("Создание пользователя без email")
     @Description("Проверка ошибки при попытке создать пользователя без email")
-    public void testCreateUserWithoutRequiredField() {
-        user.setEmail(null);
-        Response response = steps.createUser(user);
+    public void testCreateUserWithoutEmail() {
+        User userWithoutEmail = new User(null, user.getPassword(), user.getName());
+        Response response = steps.createUser(userWithoutEmail);
+        steps.verifyMissingFieldError(response);
+    }
+
+    @Test
+    @DisplayName("Создание пользователя без пароля")
+    @Description("Проверка ошибки при попытке создать пользователя без пароля")
+    public void testCreateUserWithoutPassword() {
+        User userWithoutPassword = new User(user.getEmail(), null, user.getName());
+        Response response = steps.createUser(userWithoutPassword);
+        steps.verifyMissingFieldError(response);
+    }
+
+    @Test
+    @DisplayName("Создание пользователя без имени")
+    @Description("Проверка ошибки при попытке создать пользователя без имени")
+    public void testCreateUserWithoutName() {
+        User userWithoutName = new User(user.getEmail(), user.getPassword(), null);
+        Response response = steps.createUser(userWithoutName);
         steps.verifyMissingFieldError(response);
     }
 }
