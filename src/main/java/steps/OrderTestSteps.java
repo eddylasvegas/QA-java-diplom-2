@@ -4,6 +4,7 @@ import api.ApiClient;
 import io.qameta.allure.Step;
 import io.restassured.response.Response;
 import models.Order;
+import static org.apache.http.HttpStatus.*;
 
 import static org.hamcrest.Matchers.equalTo;
 
@@ -18,20 +19,20 @@ public class OrderTestSteps {
     @Step("Проверить успешное создание заказа")
     public void verifyOrderCreatedSuccessfully(Response response) {
         response.then()
-                .statusCode(200)
+                .statusCode(SC_OK)
                 .body("success", equalTo(true));
     }
 
     @Step("Проверить ошибку при создании заказа без ингредиентов")
     public void verifyEmptyIngredientsError(Response response) {
         response.then()
-                .statusCode(400)
+                .statusCode(SC_BAD_REQUEST)
                 .body("message", equalTo("Ingredient ids must be provided"));
     }
 
     @Step("Проверить ошибку при невалидных ингредиентах")
     public void verifyInvalidIngredientsError(Response response) {
         response.then()
-                .statusCode(500);
+                .statusCode(SC_INTERNAL_SERVER_ERROR);
     }
 }
